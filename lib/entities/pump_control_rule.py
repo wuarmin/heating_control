@@ -18,6 +18,9 @@ class PumpControlRule(object):
 
   def next_schedule(self, pump, current_date_time):
     current_time_control      = self.__find_time_control(current_date_time)
+    if(current_time_control is None): # there is no time_control definition at the moment
+      return None
+
     temp_delta                = self.nominal_temperature-self.start_temperature
     time_per_slot             = current_time_control.check_interval/self.time_slots
     increase_per_slot         = (time_per_slot*temp_delta)/current_time_control.check_interval
@@ -26,7 +29,7 @@ class PumpControlRule(object):
 
     next_start = current_date_time + datetime.timedelta(seconds=seconds_to_wait)
     start_time_control = self.__find_time_control(next_start)
-    if(current_time_control != start_time_control):
+    if(current_time_control != start_time_control): # next_start would be within subsequent time_control
       return None
 
     next_stop = current_date_time + datetime.timedelta(seconds=current_time_control.check_interval)
