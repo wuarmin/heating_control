@@ -14,3 +14,4 @@ venv.bak/
 
 # Unit test / coverage reports
 .cache
+/heating_control_db.json
