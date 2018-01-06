@@ -10,14 +10,12 @@ class ControlPump(object):
     self.current_time = current_time
     next_schedule = self.next_schedule()
 
-    print("here next_schedule", next_schedule);
+    if(not self.pump.on and self.current_time >= next_schedule.next_start):
+      self.pump.switch_on()
 
-    # next_schedule = rule.next_schedule(pump, current_time)
-    # print("next_schedule", next_schedule.next_start)
-
-    # get the current temperature
-    # what's the current time slice
-    # when is next start and next stop
+    if(self.pump.on and self.current_time >= next_schedule.next_stop):
+      self.pump.switch_off()
+      self.pump_schedule_repo.delete(next_schedule)
 
   def next_schedule(self):
     next_schedule = self.pump_schedule_repo.find_by_pump_id(self.pump.id)

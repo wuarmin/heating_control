@@ -1,5 +1,5 @@
 import datetime
-from tinydb import TinyDB, Query
+from tinydb import TinyDB, Query, where
 from ..entities.pump_schedule import PumpSchedule
 
 class PumpScheduleRepository:
@@ -18,6 +18,9 @@ class PumpScheduleRepository:
       'next_start': pump_schedule.next_start.strftime('%Y-%m-%dT%H:%M:%S.%f'),
       'next_stop': pump_schedule.next_stop.strftime('%Y-%m-%dT%H:%M:%S.%f')
     })
+
+  def delete(self, pump_schedule):
+    self.table.remove(where('pump_id') == pump_schedule.pump_id)
 
   def clear(self):
     self.table.purge()

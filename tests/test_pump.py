@@ -11,6 +11,13 @@ def test_init():
   assert pump.id           == 'OG'
   assert pump.control_pin  == 14
 
+def test_switch_on_off():
+  pump = Pump(id='OG', control_pin=14)
+  pump.switch_off()
+  pump.on = False
+  pump.switch_on()
+  pump.on = True
+
 def test_returns_its_rule():
   pump = Pump(id='OG', control_pin=14)
   rule = pump.rule
