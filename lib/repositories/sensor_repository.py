@@ -1,5 +1,5 @@
 import json
-from ..entities.pump_control_rule import PumpControlRule
+from lib.entities.pump_control_rule import PumpControlRule
 
 class SensorRepository:
 

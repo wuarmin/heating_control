@@ -2,9 +2,9 @@ import sys
 import pytest
 import datetime
 
-from ..lib.repositories.pump_control_rule_repository import PumpControlRuleRepository
-from ..lib.entities.pump_control_rule import PumpControlRule
-from ..lib.entities.time_control import TimeControl
+from lib.repositories.pump_control_rule_repository import PumpControlRuleRepository
+from lib.entities.pump_control_rule import PumpControlRule
+from lib.entities.time_control import TimeControl
 
 def test_find_for_pump_id():
   repo = PumpControlRuleRepository()

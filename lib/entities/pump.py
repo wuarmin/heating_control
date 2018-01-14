@@ -1,4 +1,4 @@
-from ..repositories.pump_control_rule_repository import PumpControlRuleRepository
+from lib.repositories.pump_control_rule_repository import PumpControlRuleRepository
 
 class Pump(object):
 

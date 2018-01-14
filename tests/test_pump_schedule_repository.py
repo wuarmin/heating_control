@@ -3,8 +3,8 @@ import pytest
 import datetime
 import collections
 
-from ..lib.repositories.pump_schedule_repository import PumpScheduleRepository
-from ..lib.entities.pump_schedule import PumpSchedule
+from lib.repositories.pump_schedule_repository import PumpScheduleRepository
+from lib.entities.pump_schedule import PumpSchedule
 
 # fixtures
 @pytest.fixture()

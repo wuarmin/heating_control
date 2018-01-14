@@ -1,6 +1,6 @@
 import datetime
 from tinydb import TinyDB, Query, where
-from ..entities.pump_schedule import PumpSchedule
+from lib.entities.pump_schedule import PumpSchedule
 
 class PumpScheduleRepository:
 

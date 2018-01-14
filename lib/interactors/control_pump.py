@@ -1,4 +1,4 @@
-from ..repositories.pump_schedule_repository import PumpScheduleRepository
+from lib.repositories.pump_schedule_repository import PumpScheduleRepository
 
 class ControlPump(object):
 

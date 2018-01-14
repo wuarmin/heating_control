@@ -3,8 +3,8 @@ import pytest
 import datetime
 import collections
 
-from ..lib.entities.pump_control_rule import PumpControlRule
-from ..lib.entities.pump_schedule import PumpSchedule
+from lib.entities.pump_control_rule import PumpControlRule
+from lib.entities.pump_schedule import PumpSchedule
 
 # fixtures
 @pytest.fixture()

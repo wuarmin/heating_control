@@ -2,8 +2,8 @@ import sys
 import pytest
 import time
 
-from ..lib.repositories.sensor_repository import SensorRepository
-# from ..lib.entities.sensor import Sensor
+from lib.repositories.sensor_repository import SensorRepository
+# from lib.entities.sensor import Sensor
 
 # fixtures
 @pytest.fixture()

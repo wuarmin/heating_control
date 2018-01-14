@@ -2,7 +2,7 @@ import sys
 import pytest
 import datetime
 
-from ..lib.entities.time_control import TimeControl
+from lib.entities.time_control import TimeControl
 
 # fixtures
 @pytest.fixture()

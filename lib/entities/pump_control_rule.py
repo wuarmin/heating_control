@@ -1,6 +1,6 @@
 import datetime
-from .time_control import TimeControl
-from .pump_schedule import PumpSchedule
+from lib.entities.time_control import TimeControl
+from lib.entities.pump_schedule import PumpSchedule
 
 def is_time_in_range(start_at_time, current_time, end_at_time):
   if start_at_time < end_at_time:

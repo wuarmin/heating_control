@@ -2,8 +2,8 @@ import sys
 import pytest
 import datetime
 
-from ..lib.entities.pump import Pump
-from ..lib.entities.pump_control_rule import PumpControlRule
+from lib.entities.pump import Pump
+from lib.entities.pump_control_rule import PumpControlRule
 
 def test_init():
   pump = Pump(id='OG', control_pin=14)

@@ -3,10 +3,10 @@ import pytest
 import datetime
 import collections
 
-from ..lib.interactors.control_pump import ControlPump
-from ..lib.repositories.pump_schedule_repository import PumpScheduleRepository
-from ..lib.entities.pump_schedule import PumpSchedule
-from ..lib.entities.pump import Pump
+from lib.interactors.control_pump import ControlPump
+from lib.repositories.pump_schedule_repository import PumpScheduleRepository
+from lib.entities.pump_schedule import PumpSchedule
+from lib.entities.pump import Pump
 
 # fixtures
 @pytest.fixture()
