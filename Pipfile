@@ -13,5 +13,4 @@ pytest = "*"
 [packages]
 
 tinydb = "*"
-python-dotenv = "*"
 simple-settings = "*"
