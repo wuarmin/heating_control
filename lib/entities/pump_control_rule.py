@@ -14,7 +14,7 @@ class PumpControlRule(object):
     self.start_temperature    = start_temperature
     self.nominal_temperature  = nominal_temperature
     self.time_slots           = time_slots
-    self.time_controls        = [ TimeControl(**e) for e in time_controls]
+    self.time_controls        = time_controls
 
   def next_schedule(self, pump, current_date_time):
     current_time_control      = self.__find_time_control(current_date_time)

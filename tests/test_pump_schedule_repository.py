@@ -1,7 +1,7 @@
 import sys
 import pytest
-import datetime
 import collections
+from datetime import datetime
 
 from lib.repositories.pump_schedule_repository import PumpScheduleRepository
 from lib.entities.pump_schedule import PumpSchedule
@@ -15,16 +15,16 @@ def repo():
 
 @pytest.fixture()
 def new_schedule():
-  return PumpSchedule(pump_id='OG', next_start='2017-01-01T15:15:15.000000', next_stop='2017-01-01T15:15:16.000000')
+  return PumpSchedule(pump_id='OG', next_start=datetime(2017, 1, 1, 15, 15, 15, 1), next_stop=datetime(2017, 1, 1, 15, 15, 16, 1100))
 
 # tests
 def test_create_and_find_by_pump_id(repo, new_schedule):
   repo.create(new_schedule)
   schedule = repo.find_by_pump_id('OG')
   assert isinstance(schedule, PumpSchedule)
-  assert schedule.pump_id == new_schedule.pump_id
-  assert schedule.next_start == datetime.datetime(2017, 1, 1, 15, 15, 15, 000000)
-  assert schedule.next_stop == datetime.datetime(2017, 1, 1, 15, 15, 16, 000000)
+  assert schedule.pump_id    == new_schedule.pump_id
+  assert schedule.next_start == datetime(2017, 1, 1, 15, 15, 15, 1)
+  assert schedule.next_stop  == datetime(2017, 1, 1, 15, 15, 16, 1100)
 
 def test_delete(repo, new_schedule):
   repo.create(new_schedule)
