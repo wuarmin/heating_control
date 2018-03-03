@@ -1,1 +1,1 @@
-HEATING_CONTROL_CONFIG = 'heating_control_db.json'
+HEATING_CONTROL_CONFIG = 'config/test_heating_control_config.json'
