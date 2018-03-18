@@ -1,15 +1,17 @@
 import json
+
 from lib.entities.pump_control_rule import PumpControlRule
+
 
 class SensorRepository:
 
-  def find(self, id):
-    return PumpControlRule(**json.loads(self.json())[pump_id])
+    def find(self, id):
+        return PumpControlRule(**json.loads(self.json())[pump_id])
 
-  def json(self):
-    return """{ 
+    def json(self):
+        return """{
                 "OG": {
-                  "start_temperature": 30, 
+                  "start_temperature": 30,
                   "nominal_temperature": 45,
                   "time_slots": 4,
                   "time_controls": [{
