@@ -28,3 +28,7 @@ def test_returns_its_rule():
     assert rule.start_temperature == 30
     assert rule.nominal_temperature == 45
     assert rule.time_slots == 4
+
+def test_returns_true_if_pump_is_off():
+    pump = Pump(id='OG', control_pin=14)
+    assert pump.off == True

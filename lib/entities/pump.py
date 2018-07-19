@@ -12,6 +12,10 @@ class Pump(object):
     def rule(self):
         return PumpControlRuleRepository().find_for_pump_id(self.id)
 
+    @property
+    def off(self):
+        return self.on == False
+
     def switch_on(self):
         self.on = True
 
