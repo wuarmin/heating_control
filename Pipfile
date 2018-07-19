@@ -8,7 +8,9 @@ name = "pypi"
 [dev-packages]
 
 pytest = "*"
-
+# checkout https://stackoverflow.com/questions/49222352/upgrading-pytest-causes-typeerror-nonetype-object-is-not-callable-error
+# to understand the following line!
+pluggy = { git = 'https://github.com/pytest-dev/pluggy@dcde058f93a509b9c39409fca02100e43bb43485', editable = true }
 
 [packages]
 
