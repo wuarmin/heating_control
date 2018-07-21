@@ -1,4 +1,4 @@
-import datetime
+from datetime import timedelta
 
 from lib.repositories.pump_control_rule_repository import PumpControlRuleRepository
 from lib.entities.pump_schedule import PumpSchedule
@@ -21,31 +21,14 @@ class GetNextPumpSchedule(object):
 
     def __next_schedule(self):
         current_time_control = self.__find_time_control(self.current_date_time)
-        if(current_time_control is None):  # there is no time_control definition at the moment
+        if(current_time_control is None):
             return None
 
-        time_per_slot = current_time_control.check_interval / self.control_rule.time_slots
-        increase_per_slot = (time_per_slot * self.control_rule.temperature_delta) / current_time_control.check_interval
-        slots_to_run = (self.control_rule.nominal_temperature - self.current_temperature()) / increase_per_slot
-        seconds_to_wait = (self.control_rule.time_slots - slots_to_run) * time_per_slot
-
-        next_start = self.current_date_time + datetime.timedelta(seconds=seconds_to_wait)
-        start_time_control = self.__find_time_control(next_start)
-        if(current_time_control != start_time_control):  # next_start would be within subsequent time_control
+        next_start = self.__compute_next_start(current_time_control)
+        if(current_time_control != self.__find_time_control(next_start)):
             return None
 
-        next_stop = self.current_date_time + \
-            datetime.timedelta(seconds=current_time_control.check_interval)
-
-        stop_time_control = self.__find_time_control(next_stop)
-
-        if(current_time_control != stop_time_control):
-            replace_units = {'hour': stop_time_control.start_at.hour,
-                             'minute': stop_time_control.start_at.minute, 'second': 0}
-            if(next_stop.time() <= stop_time_control.start_at):  # check if stop_time_control starts at previous day
-                replace_units['day'] = next_start.day
-            next_stop = next_stop.replace(**replace_units)
-
+        next_stop = self.__compute_next_stop(next_start, current_time_control)
         return PumpSchedule(pump_id=self.pump.id, next_start=next_start, next_stop=next_stop)
 
     def __find_time_control(self, current_date_time):
@@ -59,8 +42,24 @@ class GetNextPumpSchedule(object):
         else:  # over midnight
             return current_time >= time_control.start_at or current_time <= time_control.end_at
 
-    def __time_delta(self):
-        self.control_rule.nominal_temperature - self.control_rule.start_temperature
+    def __compute_next_start(self, current_time_control):
+        time_per_slot = current_time_control.check_interval / self.control_rule.time_slots
+        increase_per_slot = (time_per_slot * self.control_rule.temperature_delta) / current_time_control.check_interval
+        slots_to_run = (self.control_rule.nominal_temperature - self.current_temperature()) / increase_per_slot
+        seconds_to_wait = (self.control_rule.time_slots - slots_to_run) * time_per_slot
+
+        return self.current_date_time + timedelta(seconds=seconds_to_wait)
+
+    def __compute_next_stop(self, next_start, current_time_control):
+        next_stop = self.current_date_time + timedelta(seconds=current_time_control.check_interval)
+        stop_time_control = self.__find_time_control(next_stop)
+
+        if(current_time_control != stop_time_control):
+            replace_units = {'hour': stop_time_control.start_at.hour, 'minute': stop_time_control.start_at.minute, 'second': 0}
+            if(next_stop.time() <= stop_time_control.start_at):  # check if stop_time_control starts at previous day
+                replace_units['day'] = next_start.day
+            next_stop = next_stop.replace(**replace_units)
+        return next_stop
 
     def current_temperature(self):
         return 33
