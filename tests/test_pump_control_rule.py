@@ -1,7 +1,6 @@
 import sys
 import pytest
 import datetime
-import collections
 from datetime import datetime, time
 
 from lib.entities.pump_control_rule import PumpControlRule
@@ -13,7 +12,7 @@ from lib.entities.time_control import TimeControl
 
 @pytest.fixture()
 def rule():
-    return PumpControlRule(nominal_temperature=45, start_temperature=30, time_slots=4, time_controls=[
+    return PumpControlRule(nominal_temperature=45, start_temperature=30, temperature_sensor_id='OG', time_slots=4, time_controls=[
         TimeControl(
             name="Night",
             check_interval=3600,

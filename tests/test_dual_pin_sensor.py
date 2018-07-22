@@ -11,4 +11,4 @@ def test_init():
 
 def test_returns_current_temperature():
     dp_sensor = DualPinSensor(id='OG', pin_one=14, pin_two=15)
-    assert dp_sensor.current_temperature() == 37.5
+    assert dp_sensor.current_temperature() == 33.0

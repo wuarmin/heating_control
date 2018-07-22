@@ -17,4 +17,4 @@ class DualPinSensor(implements(SensorInterface)):
         return 30
 
     def _temperature_two(self):
-        return 15
+        return 12

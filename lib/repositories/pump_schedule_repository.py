@@ -12,10 +12,10 @@ class PumpScheduleRepository:
 
     def find_by_pump_id(self, pump_id):
         result = self.table.search(Query().pump_id == pump_id)
-        return self.__deserialize_pump_schedule(result[0]) if len(result) > 0 else None
+        return self._deserialize_pump_schedule(result[0]) if len(result) > 0 else None
 
     def create(self, pump_schedule):
-        self.table.insert(self.__serialize_pump_schedule(pump_schedule))
+        self.table.insert(self._serialize_pump_schedule(pump_schedule))
 
     def delete(self, pump_schedule):
         self.table.remove(where('pump_id') == pump_schedule.pump_id)
@@ -23,8 +23,7 @@ class PumpScheduleRepository:
     def clear(self):
         self.table.purge()
 
-    # private
-    def __deserialize_pump_schedule(self, tdb_dict):
+    def _deserialize_pump_schedule(self, tdb_dict):
         pump_schedule_dict = {
             'pump_id': tdb_dict.get('pump_id'),
             'next_start': datetime.strptime(tdb_dict.get('next_start'), '%Y-%m-%dT%H:%M:%S.%f'),
@@ -32,8 +31,7 @@ class PumpScheduleRepository:
         }
         return PumpSchedule(**pump_schedule_dict)
 
-    # private
-    def __serialize_pump_schedule(self, pump_schedule):
+    def _serialize_pump_schedule(self, pump_schedule):
         return {
             'pump_id': pump_schedule.pump_id,
             'next_start': pump_schedule.next_start.strftime('%Y-%m-%dT%H:%M:%S.%f'),

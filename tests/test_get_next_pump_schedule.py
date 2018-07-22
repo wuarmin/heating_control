@@ -1,7 +1,7 @@
 import sys
 import pytest
 import datetime
-import collections
+from collections import namedtuple
 from datetime import datetime, time
 
 from lib.entities.pump_control_rule import PumpControlRule
@@ -19,17 +19,27 @@ def fake_pump_repository(rule):
 
     return FakePumpControlRuleRepository()
 
+def fake_sensor_repository(temperature):
+    class FakeSensor(object):
+        def current_temperature(self):
+            return temperature
+
+    class FakeSensorRepository(object):
+        def find(self, id):
+            return FakeSensor()
+
+    return FakeSensorRepository()
+
 
 @pytest.fixture()
 def pump():
-    return collections.namedtuple('Pump', ['id'])
+    return namedtuple('Pump', ['id'])
 
 # tests
 
 
-def test_next_schedule_returns_none_because_subsequent_schedule_will_start_before_current_will_be_applied(
-        pump):
-    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, time_slots=4, time_controls=[
+def test_next_schedule_returns_none_because_subsequent_schedule_will_start_before_current_will_be_applied(pump):
+    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, temperature_sensor_id='OG', time_slots=4, time_controls=[
         TimeControl(
             name="Night",
             check_interval=3600,
@@ -46,14 +56,17 @@ def test_next_schedule_returns_none_because_subsequent_schedule_will_start_befor
             end_at=time(8)),
     ])
 
-    get_next_pump_schedule = GetNextPumpSchedule(pump_control_rule_repo=fake_pump_repository(rule_for_test))
+    get_next_pump_schedule = GetNextPumpSchedule(
+        pump_control_rule_repo=fake_pump_repository(rule_for_test),
+        sensor_repo=fake_sensor_repository(33)
+    )
     next_schedule = get_next_pump_schedule(pump=pump('OG'), current_date_time=datetime(1989, 12, 24, 3, 55, 59, 000000))
 
     assert next_schedule is None
 
 
 def test_next_schedule_returns_a_schedule_which_is_in_current_time_control(pump):
-    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, time_slots=4, time_controls=[
+    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, temperature_sensor_id='OG', time_slots=4, time_controls=[
         TimeControl(
             name="Night",
             check_interval=8800,
@@ -64,7 +77,10 @@ def test_next_schedule_returns_a_schedule_which_is_in_current_time_control(pump)
                 59)),
     ])
 
-    get_next_pump_schedule = GetNextPumpSchedule(pump_control_rule_repo=fake_pump_repository(rule_for_test))
+    get_next_pump_schedule = GetNextPumpSchedule(
+        pump_control_rule_repo=fake_pump_repository(rule_for_test),
+        sensor_repo=fake_sensor_repository(33)
+    )
     next_schedule = get_next_pump_schedule(pump=pump('OG'), current_date_time=datetime(1989, 12, 24, 23, 30, 59, 000000))
 
     assert isinstance(next_schedule, PumpSchedule)
@@ -74,7 +90,7 @@ def test_next_schedule_returns_a_schedule_which_is_in_current_time_control(pump)
 
 
 def test_next_schedule_returns_a_schedule_which_is_in_current_time_control_but_overnight(pump):
-    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, time_slots=4, time_controls=[
+    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, temperature_sensor_id='OG', time_slots=4, time_controls=[
         TimeControl(
             name="Night",
             check_interval=3600,
@@ -91,7 +107,11 @@ def test_next_schedule_returns_a_schedule_which_is_in_current_time_control_but_o
             end_at=time(8)),
     ])
 
-    get_next_pump_schedule = GetNextPumpSchedule(pump_control_rule_repo=fake_pump_repository(rule_for_test))
+    get_next_pump_schedule = GetNextPumpSchedule(
+        pump_control_rule_repo=fake_pump_repository(rule_for_test),
+        sensor_repo=fake_sensor_repository(33)
+    )
+
     next_schedule = get_next_pump_schedule(pump=pump('OG'), current_date_time=datetime(1989, 12, 24, 23, 30, 59, 000000))
     
     assert isinstance(next_schedule, PumpSchedule)
@@ -101,7 +121,7 @@ def test_next_schedule_returns_a_schedule_which_is_in_current_time_control_but_o
 
 
 def test_starts_at_current_time_control_but_ends_with_start_of_subsequent_control_same_day(pump):
-    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, time_slots=4, time_controls=[
+    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, temperature_sensor_id='OG', time_slots=4, time_controls=[
         TimeControl(
             name="Night",
             check_interval=3600,
@@ -120,7 +140,10 @@ def test_starts_at_current_time_control_but_ends_with_start_of_subsequent_contro
             end_at=time(8)),
     ])
 
-    get_next_pump_schedule = GetNextPumpSchedule(pump_control_rule_repo=fake_pump_repository(rule_for_test))
+    get_next_pump_schedule = GetNextPumpSchedule(
+        pump_control_rule_repo=fake_pump_repository(rule_for_test),
+        sensor_repo=fake_sensor_repository(33)
+    )
     next_schedule = get_next_pump_schedule(pump=pump('OG'), current_date_time=datetime(1989, 12, 24, 23, 30, 59, 000000))
     
     assert isinstance(next_schedule, PumpSchedule)
@@ -130,7 +153,7 @@ def test_starts_at_current_time_control_but_ends_with_start_of_subsequent_contro
 
 
 def test_starts_at_current_time_control_but_ends_with_start_of_subsequent_control_next_day(pump):
-    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, time_slots=4, time_controls=[
+    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, temperature_sensor_id='OG', time_slots=4, time_controls=[
         TimeControl(
             name="Night",
             check_interval=3600,
@@ -148,7 +171,10 @@ def test_starts_at_current_time_control_but_ends_with_start_of_subsequent_contro
                 6),
             end_at=time(8)),
     ])
-    get_next_pump_schedule = GetNextPumpSchedule(pump_control_rule_repo=fake_pump_repository(rule_for_test))
+    get_next_pump_schedule = GetNextPumpSchedule(
+        pump_control_rule_repo=fake_pump_repository(rule_for_test),
+        sensor_repo=fake_sensor_repository(33)
+    )
     next_schedule = get_next_pump_schedule(pump=pump('OG'), current_date_time=datetime(1989, 12, 24, 23, 30, 59, 000000))
     
     assert isinstance(next_schedule, PumpSchedule)
@@ -158,7 +184,7 @@ def test_starts_at_current_time_control_but_ends_with_start_of_subsequent_contro
 
 
 def test_returns_none_if_no_time_control_is_set(pump):
-    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, time_slots=4, time_controls=[
+    rule_for_test = PumpControlRule(nominal_temperature=45, start_temperature=30, temperature_sensor_id='OG', time_slots=4, time_controls=[
         TimeControl(
             name="Morning",
             check_interval=3600,
@@ -169,7 +195,10 @@ def test_returns_none_if_no_time_control_is_set(pump):
             end_at=time(8)),
     ])
 
-    get_next_pump_schedule = GetNextPumpSchedule(pump_control_rule_repo=fake_pump_repository(rule_for_test))
+    get_next_pump_schedule = GetNextPumpSchedule(
+        pump_control_rule_repo=fake_pump_repository(rule_for_test),
+        sensor_repo=fake_sensor_repository(33)
+    )
     next_schedule = get_next_pump_schedule(pump=pump('OG'), current_date_time=datetime(1989, 12, 24, 23, 30, 59, 000000))
     
     assert next_schedule is None

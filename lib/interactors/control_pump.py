@@ -12,19 +12,19 @@ class ControlPump(object):
         self.pump = pump
         self.current_time = current_time
 
-        self.__switch_on_off_pump(self.__next_schedule())
+        self._switch_on_off_pump(self._next_schedule())
 
-    def __next_schedule(self):
-        next_schedule = self.__stored_next_schedule()
+    def _next_schedule(self):
+        next_schedule = self._stored_next_schedule()
         if(next_schedule is None):
             next_schedule = self.get_next_pump_schedule(self.current_time, self.pump)
             self.pump_schedule_repo.create(next_schedule)
         return next_schedule
 
-    def __stored_next_schedule(self):
+    def _stored_next_schedule(self):
         return self.pump_schedule_repo.find_by_pump_id(self.pump.id)
 
-    def __switch_on_off_pump(self, next_schedule):
+    def _switch_on_off_pump(self, next_schedule):
         if(self.pump.off and self.current_time >= next_schedule.next_start):
             self.pump.switch_on()
         

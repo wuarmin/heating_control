@@ -3,6 +3,7 @@
     "OG": {
       "start_temperature": 30, 
       "nominal_temperature": 45,
+      "temperature_sensor_id": "OG",
       "time_slots": 4,
       "time_controls": [{
         "name": "Night",
@@ -21,7 +22,8 @@
     },
     "EG": {
       "start_temperature": 30,
-      "nominal_temperature": 60
+      "nominal_temperature": 60,
+      "temperature_sensor": "OG"
     }
   },
   "sensors": {
