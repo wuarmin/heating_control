@@ -13,3 +13,4 @@ pylint = "*"
 [packages]
 tinydb = "*"
 simple-settings = "*"
+python-interface = "*"

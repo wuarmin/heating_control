@@ -26,12 +26,15 @@
   },
   "sensors": {
     "OG": {
-      "forward": "AEDDEE34DE22",
-      "return": "ASKJSKLAJSSA"
+      "pin_one": 12,
+      "pin_two": 13
     },
     "EG": {
-      "forward": "OIOIIOASIOASI",
-      "return": "OPOAS654564OP"
+      "pin_one": 14,
+      "pin_two": 15
+    },
+    "OS": {
+      "pin_one": 99
     }
   }
 }
