@@ -22,9 +22,9 @@ def test_finds_a_dual_pin_sensor(repo):
     assert dp_sensor.pin_two == 13
 
 def test_finds_a_single_pin_sensor(repo):
-    sp_sensor = repo.find('OS')
+    sp_sensor = repo.find('OUTSIDE')
     assert isinstance(sp_sensor, SinglePinSensor)
-    assert sp_sensor.id == 'OS'
+    assert sp_sensor.id == 'OUTSIDE'
     assert sp_sensor.pin == 99
 
 def test_returns_none_if_no_sensor_is_not_found(repo):
